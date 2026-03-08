@@ -1,18 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Monitoreo INIA</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-  <body>
-    <h2>Monitoreo Ambiental INIA </h2>
-    <h3>Temperatura</h3>
-    <canvas id="tempchart"></canvas>
-    <h3>Conductividad Eléctrica</h3>
-    <canvas id="condChart"></canvas>
-    <h3>Sólidos Disueltos Totales</h3>
-    <canvas id="tdsChart"></canvas>
-    <script src="script.js"></script>
-  </body>
+
+<head>
+
+<title>Monitoreo INIA</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+
+body{
+font-family: Arial;
+margin:40px;
+}
+
+canvas{
+max-width:900px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Monitoreo de Calidad de Agua - INIA</h2>
+
+<label>Subir archivo Excel:</label>
+
+<input type="file" id="archivoExcel">
+
+<br><br>
+
+<label>Seleccionar módulo:</label>
+
+<select id="modulo">
+
+<option value="2">Módulo 2</option>
+<option value="3">Módulo 3</option>
+<option value="4">Módulo 4</option>
+<option value="6">Módulo 6</option>
+<option value="7">Módulo 7</option>
+
+</select>
+
+<br><br>
+
+<canvas id="grafico"></canvas>
+
+<script src="script.js"></script>
+
+</body>
+
 </html>
