@@ -1,4 +1,4 @@
-let datos=[]
+let datosExcel=[]
 
 const ctx=document.getElementById("grafico")
 
@@ -9,13 +9,11 @@ type:"line",
 data:{
 labels:[],
 datasets:[]
-},
-
-options:{
-responsive:true
 }
 
 })
+
+// CARGAR EXCEL AUTOMATICAMENTE
 
 fetch("datos.xlsx")
 
@@ -27,11 +25,13 @@ let libro=XLSX.read(data,{type:"array"})
 
 let hoja=libro.Sheets[libro.SheetNames[0]]
 
-datos=XLSX.utils.sheet_to_json(hoja)
+datosExcel=XLSX.utils.sheet_to_json(hoja)
 
 actualizarGrafico(2)
 
 })
+
+// FUNCION PARA GRAFICO
 
 function actualizarGrafico(modulo){
 
@@ -40,17 +40,17 @@ let temp=[]
 let cond=[]
 let tds=[]
 
-for(let i=0;i<datos.length;i++){
+for(let i=0;i<datosExcel.length;i++){
 
-if(datos[i].modulo==modulo){
+if(datosExcel[i].modulo==modulo){
 
-fechas.push(datos[i].fecha)
+fechas.push(datosExcel[i].fecha)
 
-temp.push(datos[i].temperatura)
+temp.push(datosExcel[i].temperatura)
 
-cond.push(datos[i].conductividad)
+cond.push(datosExcel[i].conductividad)
 
-tds.push(datos[i].tds)
+tds.push(datosExcel[i].tds)
 
 }
 
@@ -63,22 +63,19 @@ grafico.data.datasets=[
 {
 label:"Temperatura °C",
 data:temp,
-borderColor:"red",
-fill:false
+borderColor:"red"
 },
 
 {
 label:"Conductividad",
 data:cond,
-borderColor:"blue",
-fill:false
+borderColor:"blue"
 },
 
 {
 label:"TDS",
 data:tds,
-borderColor:"green",
-fill:false
+borderColor:"green"
 }
 
 ]
@@ -86,6 +83,8 @@ fill:false
 grafico.update()
 
 }
+
+// CAMBIAR MODULO
 
 document.getElementById("modulo").addEventListener("change",function(){
 
