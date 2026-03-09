@@ -1,93 +1,110 @@
-let datosExcel=[]
+const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGFfRQaF4A5aCiFhEakHHx5jZOGUH3BfnwvQw98TyAtq3wlJe88bELK5cD0Xqp0IH1TeU--jyY5I11/pub?output=csv";
 
-const ctx=document.getElementById("grafico")
+let datos = [];
 
-let grafico=new Chart(ctx,{
+const ctx = document.getElementById("grafico");
 
-type:"line",
+let grafico = new Chart(ctx, {
 
-data:{
-labels:[],
-datasets:[]
+type: "line",
+
+data: {
+labels: [],
+datasets: []
+},
+
+options:{
+responsive:true
 }
 
+});
+
+async function cargarDatos(){
+
+const respuesta = await fetch(url);
+const texto = await respuesta.text();
+
+let filas = texto.split("\n");
+
+for(let i=1;i<filas.length;i++){
+
+let col = filas[i].split(",");
+
+if(col.length >=5){
+
+datos.push({
+
+fecha: col[0],
+modulo: col[1],
+temperatura: Number(col[2]),
+conductividad: Number(col[3]),
+tds: Number(col[4])
+
 })
 
-// CARGAR EXCEL AUTOMATICAMENTE
+}
 
-fetch("datos.xlsx")
+}
 
-.then(res=>res.arrayBuffer())
+actualizarGrafico(2);
 
-.then(data=>{
-
-let libro=XLSX.read(data,{type:"array"})
-
-let hoja=libro.Sheets[libro.SheetNames[0]]
-
-datosExcel=XLSX.utils.sheet_to_json(hoja)
-
-actualizarGrafico(2)
-
-})
-
-// FUNCION PARA GRAFICO
+}
 
 function actualizarGrafico(modulo){
 
-let fechas=[]
-let temp=[]
-let cond=[]
-let tds=[]
+let fechas=[];
+let temp=[];
+let cond=[];
+let tds=[];
 
-for(let i=0;i<datosExcel.length;i++){
+for(let i=0;i<datos.length;i++){
 
-if(datosExcel[i].modulo==modulo){
+if(datos[i].modulo==modulo){
 
-fechas.push(datosExcel[i].fecha)
-
-temp.push(datosExcel[i].temperatura)
-
-cond.push(datosExcel[i].conductividad)
-
-tds.push(datosExcel[i].tds)
+fechas.push(datos[i].fecha);
+temp.push(datos[i].temperatura);
+cond.push(datos[i].conductividad);
+tds.push(datos[i].tds);
 
 }
 
 }
 
-grafico.data.labels=fechas
+grafico.data.labels=fechas;
 
 grafico.data.datasets=[
 
 {
 label:"Temperatura °C",
 data:temp,
-borderColor:"red"
+borderColor:"red",
+fill:false
 },
 
 {
 label:"Conductividad",
 data:cond,
-borderColor:"blue"
+borderColor:"blue",
+fill:false
 },
 
 {
 label:"TDS",
 data:tds,
-borderColor:"green"
+borderColor:"green",
+fill:false
 }
 
-]
+];
 
-grafico.update()
+grafico.update();
 
 }
-
-// CAMBIAR MODULO
 
 document.getElementById("modulo").addEventListener("change",function(){
 
-actualizarGrafico(this.value)
+actualizarGrafico(this.value);
 
-})
+});
+
+cargarDatos();
